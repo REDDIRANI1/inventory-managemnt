@@ -10,5 +10,4 @@ services:
         sync: false
         placeholder: "Your production database connection string (e.g. postgresql://...)"
       - key: CORS_ORIGINS
-        sync: false
         value: "*"
