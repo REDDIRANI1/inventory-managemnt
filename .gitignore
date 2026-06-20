@@ -73,3 +73,10 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
+
+# Custom additions
+*.pdf
+loop-prompt.html
+assigmeind.md
+agents.md
+commit-as-rrr.sh
