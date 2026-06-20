@@ -30,7 +30,7 @@ A production-ready full-stack Inventory and Order Management System, built as a 
    ```
 
 4. Access the services:
-   - **Frontend UI:** `http://localhost:3000`
+   - **Frontend UI:** `http://localhost:3005`
    - **Backend API Docs (Swagger):** `http://localhost:8000/docs`
 
 ## Environment Variables
@@ -41,7 +41,7 @@ A production-ready full-stack Inventory and Order Management System, built as a 
 | `POSTGRES_USER` | Database user | `postgres` |
 | `POSTGRES_PASSWORD` | Database password | `postgres` |
 | `DATABASE_URL` | SQLAlchemy connection string | `postgresql://postgres:postgres@db:5432/inventory` |
-| `CORS_ORIGINS` | Allowed origins for backend CORS | `http://localhost:3000` |
+| `CORS_ORIGINS` | Allowed origins for backend CORS | `http://localhost:3000,http://localhost:3005,http://127.0.0.1:3005` |
 | `VITE_API_URL` | Backend API URL for frontend (build-time) | `http://localhost:8000` |
 
 ## API Endpoints
