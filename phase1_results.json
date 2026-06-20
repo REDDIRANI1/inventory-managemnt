@@ -1,0 +1,252 @@
+{
+  "1. Health check": {
+    "status_code": 200,
+    "body": "{\"status\":\"ok\"}",
+    "status": "PASS"
+  },
+  "Create Product 1": {
+    "status_code": 201,
+    "body": "{\"name\":\"Laptop\",\"sku\":\"LPT-001\",\"price\":\"999.99\",\"quantity\":50,\"low_stock_threshold\":5,\"id\":1,\"created_at\":\"2026-06-20T05:23:11.086584Z\",\"updated_at\":null}",
+    "status": "PASS"
+  },
+  "Create Product 2": {
+    "status_code": 201,
+    "body": "{\"name\":\"Mouse\",\"sku\":\"MOU-001\",\"price\":\"29.99\",\"quantity\":100,\"low_stock_threshold\":10,\"id\":2,\"created_at\":\"2026-06-20T05:23:11.103227Z\",\"updated_at\":null}",
+    "status": "PASS"
+  },
+  "Create Product 3": {
+    "status_code": 201,
+    "body": "{\"name\":\"Keyboard\",\"sku\":\"KEY-001\",\"price\":\"79.99\",\"quantity\":3,\"low_stock_threshold\":5,\"id\":3,\"created_at\":\"2026-06-20T05:23:11.115719Z\",\"updated_at\":null}",
+    "status": "PASS"
+  },
+  "2. Create product": {
+    "status_code": 201,
+    "body": "{\"name\":\"Laptop\",\"sku\":\"LPT-001\",\"price\":\"999.99\",\"quantity\":50,\"low_stock_threshold\":5,\"id\":1,\"created_at\":\"2026-06-20T05:23:11.086584Z\",\"updated_at\":null}",
+    "status": "PASS"
+  },
+  "3. List all products": {
+    "status_code": 200,
+    "body": "[{\"name\":\"Keyboard\",\"sku\":\"KEY-001\",\"price\":\"79.99\",\"quantity\":3,\"low_stock_threshold\":5,\"id\":3,\"created_at\":\"2026-06-20T05:23:11.115719Z\",\"updated_at\":null},{\"name\":\"Mouse\",\"sku\":\"MOU-001\",\"price\":\"29.99\",\"quantity\":100,\"low_stock_threshold\":10,\"id\":2,\"created_at\":\"2026-06-20T05:23:11.103227Z\",\"updated_at\":null},{\"name\":\"Laptop\",\"sku\":\"LPT-001\",\"price\":\"999.99\",\"quantity\":50,\"low_stock_threshold\":5,\"id\":1,\"created_at\":\"2026-06-20T05:23:11.086584Z\",\"updated_at\":null}]",
+    "status": "PASS"
+  },
+  "4. Get single product": {
+    "status_code": 200,
+    "body": "{\"name\":\"Laptop\",\"sku\":\"LPT-001\",\"price\":\"999.99\",\"quantity\":50,\"low_stock_threshold\":5,\"id\":1,\"created_at\":\"2026-06-20T05:23:11.086584Z\",\"updated_at\":null}",
+    "status": "PASS"
+  },
+  "5. Update product": {
+    "status_code": 200,
+    "body": "{\"name\":\"Gaming Laptop\",\"sku\":\"LPT-001\",\"price\":\"1299.99\",\"quantity\":50,\"low_stock_threshold\":5,\"id\":1,\"created_at\":\"2026-06-20T05:23:11.086584Z\",\"updated_at\":\"2026-06-20T05:23:11.150948Z\"}",
+    "status": "PASS"
+  },
+  "6. Delete product": {
+    "status_code": 204,
+    "body": "",
+    "status": "PASS"
+  },
+  "7. Verify deletion": {
+    "status_code": 404,
+    "body": "{\"detail\":\"Product not found\"}",
+    "status": "PASS"
+  },
+  "8. Duplicate SKU": {
+    "status_code": 409,
+    "body": "{\"detail\":\"Product SKU already exists\"}",
+    "status": "PASS"
+  },
+  "9. Negative quantity": {
+    "status_code": 422,
+    "body": "{\"detail\":[{\"type\":\"greater_than_equal\",\"loc\":[\"body\",\"quantity\"],\"msg\":\"Input should be greater than or equal to 0\",\"input\":-5,\"ctx\":{\"ge\":0}}]}",
+    "status": "PASS"
+  },
+  "10. Missing required field": {
+    "status_code": 422,
+    "body": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"name\"],\"msg\":\"Field required\",\"input\":{\"sku\":\"X-001\",\"price\":10,\"quantity\":5}}]}",
+    "status": "PASS"
+  },
+  "11. Zero price": {
+    "status_code": 422,
+    "body": "{\"detail\":[{\"type\":\"greater_than\",\"loc\":[\"body\",\"price\"],\"msg\":\"Input should be greater than 0\",\"input\":0,\"ctx\":{\"gt\":0}}]}",
+    "status": "PASS"
+  },
+  "12. Non-existent product": {
+    "status_code": 404,
+    "body": "{\"detail\":\"Product not found\"}",
+    "status": "PASS"
+  },
+  "Create Customer 1": {
+    "status_code": 201,
+    "body": "{\"full_name\":\"John Doe\",\"email\":\"john@example.com\",\"phone\":\"555-0101\",\"id\":1,\"created_at\":\"2026-06-20T05:23:11.254460Z\"}",
+    "status": "PASS"
+  },
+  "Create Customer 2": {
+    "status_code": 201,
+    "body": "{\"full_name\":\"Jane Smith\",\"email\":\"jane@example.com\",\"phone\":\"555-0102\",\"id\":2,\"created_at\":\"2026-06-20T05:23:11.269349Z\"}",
+    "status": "PASS"
+  },
+  "13. Create customer": {
+    "status_code": 201,
+    "body": "{\"full_name\":\"John Doe\",\"email\":\"john@example.com\",\"phone\":\"555-0101\",\"id\":1,\"created_at\":\"2026-06-20T05:23:11.254460Z\"}",
+    "status": "PASS"
+  },
+  "14. List customers": {
+    "status_code": 200,
+    "body": "[{\"full_name\":\"Jane Smith\",\"email\":\"jane@example.com\",\"phone\":\"555-0102\",\"id\":2,\"created_at\":\"2026-06-20T05:23:11.269349Z\"},{\"full_name\":\"John Doe\",\"email\":\"john@example.com\",\"phone\":\"555-0101\",\"id\":1,\"created_at\":\"2026-06-20T05:23:11.254460Z\"}]",
+    "status": "PASS"
+  },
+  "15. Get single customer": {
+    "status_code": 200,
+    "body": "{\"full_name\":\"John Doe\",\"email\":\"john@example.com\",\"phone\":\"555-0101\",\"id\":1,\"created_at\":\"2026-06-20T05:23:11.254460Z\"}",
+    "status": "PASS"
+  },
+  "16. Delete customer (no orders)": {
+    "status_code": 204,
+    "body": "",
+    "status": "PASS"
+  },
+  "17. Duplicate email": {
+    "status_code": 409,
+    "body": "{\"detail\":\"Customer email already exists\"}",
+    "status": "PASS"
+  },
+  "18. Invalid email format": {
+    "status_code": 422,
+    "body": "{\"detail\":[{\"type\":\"value_error\",\"loc\":[\"body\",\"email\"],\"msg\":\"value is not a valid email address: An email address must have an @-sign.\",\"input\":\"not-an-email\",\"ctx\":{\"reason\":\"An email address must have an @-sign.\"}}]}",
+    "status": "PASS"
+  },
+  "19. Missing name": {
+    "status_code": 422,
+    "body": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"full_name\"],\"msg\":\"Field required\",\"input\":{\"email\":\"test@test.com\"}}]}",
+    "status": "PASS"
+  },
+  "20. Non-existent customer": {
+    "status_code": 404,
+    "body": "{\"detail\":\"Customer not found\"}",
+    "status": "PASS"
+  },
+  "Stock BEFORE Order": {
+    "status_code": 200,
+    "body": "{\"name\":\"Gaming Laptop\",\"sku\":\"LPT-001\",\"price\":\"1299.99\",\"quantity\":50,\"low_stock_threshold\":5,\"id\":1,\"created_at\":\"2026-06-20T05:23:11.086584Z\",\"updated_at\":\"2026-06-20T05:23:11.150948Z\"}",
+    "status": "PASS"
+  },
+  "21. Create order": {
+    "status_code": 201,
+    "body": "{\"customer_id\":1,\"id\":1,\"total_amount\":\"2599.98\",\"created_at\":\"2026-06-20T05:23:11.376569Z\",\"items\":[{\"product_id\":1,\"quantity\":2,\"id\":1,\"order_id\":1,\"unit_price\":\"1299.99\",\"product\":{\"name\":\"Gaming Laptop\",\"sku\":\"LPT-001\",\"price\":\"1299.99\",\"quantity\":48,\"low_stock_threshold\":5,\"id\":1,\"created_at\":\"2026-06-20T05:23:11.086584Z\",\"updated_at\":\"2026-06-20T05:23:11.376569Z\"}}],\"customer\":{\"full_name\":\"John Doe\",\"email\":\"john@example.com\",\"phone\":\"555-0101\",\"id\":1,\"created_at\":\"2026-06-20T05:23:11.254460Z\"}}",
+    "status": "PASS"
+  },
+  "Stock AFTER Order Check": {
+    "status_code": 200,
+    "body": "{\"name\":\"Gaming Laptop\",\"sku\":\"LPT-001\",\"price\":\"1299.99\",\"quantity\":48,\"low_stock_threshold\":5,\"id\":1,\"created_at\":\"2026-06-20T05:23:11.086584Z\",\"updated_at\":\"2026-06-20T05:23:11.376569Z\"}",
+    "status": "PASS"
+  },
+  "22. Stock reduced": {
+    "status_code": 200,
+    "body": "Before: 50, After: 48",
+    "status": "PASS"
+  },
+  "23. Total auto-calculated": {
+    "status_code": 201,
+    "body": "Total Amount: 2599.98, Expected: 2599.98",
+    "status": "PASS"
+  },
+  "24. List orders": {
+    "status_code": 200,
+    "body": "[{\"customer_id\":1,\"id\":1,\"total_amount\":\"2599.98\",\"created_at\":\"2026-06-20T05:23:11.376569Z\",\"items\":[{\"product_id\":1,\"quantity\":2,\"id\":1,\"order_id\":1,\"unit_price\":\"1299.99\",\"product\":{\"name\":\"Gaming Laptop\",\"sku\":\"LPT-001\",\"price\":\"1299.99\",\"quantity\":48,\"low_stock_threshold\":5,\"id\":1,\"created_at\":\"2026-06-20T05:23:11.086584Z\",\"updated_at\":\"2026-06-20T05:23:11.376569Z\"}}],\"customer\":{\"full_name\":\"John Doe\",\"email\":\"john@example.com\",\"phone\":\"555-0101\",\"id\":1,\"created_at\":\"2026-06-20T05:23:11.254460Z\"}}]",
+    "status": "PASS"
+  },
+  "25. Get order detail": {
+    "status_code": 200,
+    "body": "{\"customer_id\":1,\"id\":1,\"total_amount\":\"2599.98\",\"created_at\":\"2026-06-20T05:23:11.376569Z\",\"items\":[{\"product_id\":1,\"quantity\":2,\"id\":1,\"order_id\":1,\"unit_price\":\"1299.99\",\"product\":{\"name\":\"Gaming Laptop\",\"sku\":\"LPT-001\",\"price\":\"1299.99\",\"quantity\":48,\"low_stock_threshold\":5,\"id\":1,\"created_at\":\"2026-06-20T05:23:11.086584Z\",\"updated_at\":\"2026-06-20T05:23:11.376569Z\"}}],\"customer\":{\"full_name\":\"John Doe\",\"email\":\"john@example.com\",\"phone\":\"555-0101\",\"id\":1,\"created_at\":\"2026-06-20T05:23:11.254460Z\"}}",
+    "status": "PASS"
+  },
+  "Re-create Mouse": {
+    "status_code": 201,
+    "body": "{\"name\":\"Mouse\",\"sku\":\"MOU-002\",\"price\":\"29.99\",\"quantity\":100,\"low_stock_threshold\":10,\"id\":5,\"created_at\":\"2026-06-20T05:23:11.433562Z\",\"updated_at\":null}",
+    "status": "PASS"
+  },
+  "Keyboard Stock Before": {
+    "status_code": 200,
+    "body": "{\"name\":\"Keyboard\",\"sku\":\"KEY-001\",\"price\":\"79.99\",\"quantity\":3,\"low_stock_threshold\":5,\"id\":3,\"created_at\":\"2026-06-20T05:23:11.115719Z\",\"updated_at\":null}",
+    "status": "PASS"
+  },
+  "Product 1 Stock Before Multi": {
+    "status_code": 200,
+    "body": "{\"name\":\"Gaming Laptop\",\"sku\":\"LPT-001\",\"price\":\"1299.99\",\"quantity\":48,\"low_stock_threshold\":5,\"id\":1,\"created_at\":\"2026-06-20T05:23:11.086584Z\",\"updated_at\":\"2026-06-20T05:23:11.376569Z\"}",
+    "status": "PASS"
+  },
+  "26. Multi-item order": {
+    "status_code": 201,
+    "body": "{\"customer_id\":1,\"id\":2,\"total_amount\":\"1459.97\",\"created_at\":\"2026-06-20T05:23:11.471229Z\",\"items\":[{\"product_id\":1,\"quantity\":1,\"id\":2,\"order_id\":2,\"unit_price\":\"1299.99\",\"product\":{\"name\":\"Gaming Laptop\",\"sku\":\"LPT-001\",\"price\":\"1299.99\",\"quantity\":47,\"low_stock_threshold\":5,\"id\":1,\"created_at\":\"2026-06-20T05:23:11.086584Z\",\"updated_at\":\"2026-06-20T05:23:11.471229Z\"}},{\"product_id\":3,\"quantity\":2,\"id\":3,\"order_id\":2,\"unit_price\":\"79.99\",\"product\":{\"name\":\"Keyboard\",\"sku\":\"KEY-001\",\"price\":\"79.99\",\"quantity\":1,\"low_stock_threshold\":5,\"id\":3,\"created_at\":\"2026-06-20T05:23:11.115719Z\",\"updated_at\":\"2026-06-20T05:23:11.471229Z\"}}],\"customer\":{\"full_name\":\"John Doe\",\"email\":\"john@example.com\",\"phone\":\"555-0101\",\"id\":1,\"created_at\":\"2026-06-20T05:23:11.254460Z\"}}",
+    "status": "PASS"
+  },
+  "Keyboard Stock After Check": {
+    "status_code": 200,
+    "body": "{\"name\":\"Keyboard\",\"sku\":\"KEY-001\",\"price\":\"79.99\",\"quantity\":1,\"low_stock_threshold\":5,\"id\":3,\"created_at\":\"2026-06-20T05:23:11.115719Z\",\"updated_at\":\"2026-06-20T05:23:11.471229Z\"}",
+    "status": "PASS"
+  },
+  "Product 1 Stock After Multi Check": {
+    "status_code": 200,
+    "body": "{\"name\":\"Gaming Laptop\",\"sku\":\"LPT-001\",\"price\":\"1299.99\",\"quantity\":47,\"low_stock_threshold\":5,\"id\":1,\"created_at\":\"2026-06-20T05:23:11.086584Z\",\"updated_at\":\"2026-06-20T05:23:11.471229Z\"}",
+    "status": "PASS"
+  },
+  "27. Both products' stock reduced": {
+    "status_code": 200,
+    "body": "P1 Before: 48, After: 47; P3 Before: 3, After: 1",
+    "status": "PASS"
+  },
+  "Product 1 Stock Before Delete": {
+    "status_code": 200,
+    "body": "{\"name\":\"Gaming Laptop\",\"sku\":\"LPT-001\",\"price\":\"1299.99\",\"quantity\":47,\"low_stock_threshold\":5,\"id\":1,\"created_at\":\"2026-06-20T05:23:11.086584Z\",\"updated_at\":\"2026-06-20T05:23:11.471229Z\"}",
+    "status": "PASS"
+  },
+  "28. Delete order": {
+    "status_code": 204,
+    "body": "",
+    "status": "PASS"
+  },
+  "Product 1 Stock After Delete Check": {
+    "status_code": 200,
+    "body": "{\"name\":\"Gaming Laptop\",\"sku\":\"LPT-001\",\"price\":\"1299.99\",\"quantity\":49,\"low_stock_threshold\":5,\"id\":1,\"created_at\":\"2026-06-20T05:23:11.086584Z\",\"updated_at\":\"2026-06-20T05:23:11.525284Z\"}",
+    "status": "PASS"
+  },
+  "29. Stock restored": {
+    "status_code": 200,
+    "body": "Before Delete: 47, After Delete: 49",
+    "status": "PASS"
+  },
+  "30. Insufficient stock": {
+    "status_code": 400,
+    "body": "{\"detail\":\"Insufficient stock for product Keyboard (ID: 3). Requested: 99999, Available: 1\"}",
+    "status": "PASS"
+  },
+  "31. Non-existent customer": {
+    "status_code": 404,
+    "body": "{\"detail\":\"Customer not found\"}",
+    "status": "PASS"
+  },
+  "32. Non-existent product": {
+    "status_code": 404,
+    "body": "{\"detail\":\"Product 9999 not found\"}",
+    "status": "PASS"
+  },
+  "33. Zero quantity item": {
+    "status_code": 422,
+    "body": "{\"detail\":[{\"type\":\"greater_than\",\"loc\":[\"body\",\"items\",0,\"quantity\"],\"msg\":\"Input should be greater than 0\",\"input\":0,\"ctx\":{\"gt\":0}}]}",
+    "status": "PASS"
+  },
+  "34. Empty items array": {
+    "status_code": 422,
+    "body": "{\"detail\":[{\"type\":\"too_short\",\"loc\":[\"body\",\"items\"],\"msg\":\"List should have at least 1 item after validation, not 0\",\"input\":[],\"ctx\":{\"field_type\":\"List\",\"min_length\":1,\"actual_length\":0}}]}",
+    "status": "PASS"
+  },
+  "35. Dashboard summary": {
+    "status_code": 200,
+    "body": "{\"total_products\":3,\"total_customers\":1,\"total_orders\":1,\"low_stock_products\":[{\"id\":3,\"name\":\"Keyboard\",\"sku\":\"KEY-001\",\"quantity\":1,\"low_stock_threshold\":5}]}",
+    "status": "PASS"
+  },
+  "36. Low stock products": {
+    "status_code": 200,
+    "body": "{\"total_products\":3,\"total_customers\":1,\"total_orders\":1,\"low_stock_products\":[{\"id\":3,\"name\":\"Keyboard\",\"sku\":\"KEY-001\",\"quantity\":1,\"low_stock_threshold\":5}]}",
+    "status": "PASS"
+  }
+}
