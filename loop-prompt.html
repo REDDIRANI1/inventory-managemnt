@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Inventory &amp; Order Management — Build &amp; Review Loop Prompt</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --panel2: #1c2230;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #9da7b3;
+    --accent: #2f81f7;
+    --accent2: #3fb950;
+    --warn: #d29922;
+    --mono: "SF Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    padding: 32px 16px 80px;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  header { margin-bottom: 24px; }
+  h1 { font-size: 24px; margin: 0 0 6px; }
+  .sub { color: var(--muted); font-size: 14px; }
+  .bar {
+    display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    margin: 18px 0 14px;
+  }
+  button {
+    background: var(--accent); color: #fff; border: 0; border-radius: 8px;
+    padding: 10px 16px; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  button:hover { filter: brightness(1.1); }
+  button.secondary { background: var(--panel2); color: var(--text); border: 1px solid var(--border); }
+  .hint { color: var(--muted); font-size: 13px; }
+  .prompt-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 24px;
+  }
+  pre {
+    margin: 0; white-space: pre-wrap; word-wrap: break-word;
+    font-family: var(--mono); font-size: 13.5px; line-height: 1.65; color: var(--text);
+  }
+  .copied {
+    color: var(--accent2); font-weight: 600; font-size: 13px; opacity: 0;
+    transition: opacity .2s;
+  }
+  .copied.show { opacity: 1; }
+  footer { margin-top: 28px; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>📦 Inventory &amp; Order Management — Single Loop Prompt</h1>
+    <div class="sub">Paste this entire prompt into your coding agent. It builds the app, then loops review → fix → re-review until zero bugs, then verifies against the Technical Assessment spec.</div>
+  </header>
+
+  <div class="bar">
+    <button id="copyBtn">📋 Copy prompt</button>
+    <button class="secondary" id="selectBtn">Select all</button>
+    <span class="copied" id="copied">✓ Copied to clipboard</span>
+  </div>
+
+  <div class="prompt-box">
+<pre id="prompt">ROLE
+You are a senior full-stack engineer. Build, self-review, and harden a
+simplified Inventory &amp; Order Management System end-to-end, then prove it
+matches the assessment spec. Work autonomously until the Definition of Done
+is met. Do not stop at analysis — implement, verify, and iterate.
+
+AUTHORITATIVE DOCS (read first, in this order)
+1. PLAN.md                              — the execution blueprint (follow it exactly)
+2. Technical Assessment (Software Engineer).md  — the grading spec (final source of truth)
+Read both fully before writing any code. If PLAN.md and the spec ever
+conflict, the spec wins — and note the conflict.
+
+HARD CONSTRAINTS (never violate)
+- Commit ONLY via: ./commit-as-rrr.sh "type: message"   (never use raw git commit)
+- No hardcoded credentials anywhere. All config via environment variables.
+- Stack is fixed: Python + FastAPI, React (JavaScript) + Vite, PostgreSQL,
+  Docker + Docker Compose (3 services: frontend, backend, db).
+- Keep scope tight — build exactly what the spec asks. No auth/JWT, no Redis,
+  no suppliers/warehouses/categories. No over-engineering.
+- Every line of code must run at least once. Verify before claiming done.
+
+============================================================
+PHASE 1 — IMPLEMENT (follow PLAN.md §10 build order)
+============================================================
+Build in this sequence, committing after each numbered step:
+ 1.  Scaffold repo: backend/, frontend/, .gitignore, .env.example
+ 2.  Backend: config (env), database (engine+session), models (products,
+     customers, orders, order_items), create_all on startup, GET /health
+ 3.  Backend: Pydantic v2 schemas (request/response validation)
+ 4.  Products router: POST/GET/GET{id}/PUT/DELETE  (unique SKU)
+ 5.  Customers router: POST/GET/GET{id}/DELETE     (unique email)
+ 6.  Orders router: POST/GET/GET{id}/DELETE
+     - validate stock; block if insufficient (400)
+     - auto-reduce stock on create; restore stock on delete
+     - compute total server-side; all changes in ONE transaction
+ 7.  Dashboard router: GET /dashboard/summary
+     (total_products, total_customers, total_orders, low_stock_products[])
+ 8.  pytest covering ALL business rules (see RULES below) — must pass
+ 9.  Backend Dockerfile (python:3.12-slim, non-root user) + .dockerignore
+ 10. Frontend: Vite + React + Tailwind + react-router + axios + React Query
+ 11. Reusable UI: Layout, Table, Modal, StatCard, form fields
+ 12. Products page (add/list/update/delete + low-stock badge)
+ 13. Customers page (add/list/delete)
+ 14. Orders pages (list, create flow with line items + live total, detail)
+ 15. Dashboard page (4 stat cards + low-stock table)
+ 16. Frontend Dockerfile (multi-stage: vite build -> nginx:alpine) + nginx.conf
+     (SPA fallback) + .dockerignore
+ 17. Root docker-compose.yml (db healthcheck, named volume pgdata, env vars,
+     VITE_API_URL build arg) + full `docker compose up --build` smoke test
+ 18. Seed script (optional, idempotent demo data)
+ 19. README: overview, local setup, env vars, API list, and a DEPLOYMENT
+     section with copy-paste manual steps for: deploy backend (Render),
+     deploy frontend (Vercel), push backend image to Docker Hub, push repo
+     to GitHub. (Do NOT execute deploys — document them for the user.)
+
+BUSINESS RULES (implement AND unit-test every one)
+ R1. Product SKU is unique            -> 409 on duplicate
+ R2. Customer email is unique         -> 409 on duplicate
+ R3. Product quantity never negative  -> validation + DB check
+ R4. Order blocked if stock insufficient -> 400, no partial write
+ R5. Creating an order auto-reduces stock (transactional)
+ R6. Total amount computed by backend (client total ignored)
+ R7. Deleting an order restores stock (transactional)
+ R8. All request data validated (Pydantic) -> 422 on bad input
+ R9. Correct HTTP codes everywhere: 200/201/204 + 400/404/409/422
+     and consistent JSON errors {"detail": "..."}
+
+============================================================
+PHASE 2 — REVIEW / FIX LOOP  (repeat until ZERO bugs)
+============================================================
+Treat this as a loop. Each iteration:
+
+ STEP A — REVIEW (be adversarial, hunt for bugs; do not confirm success):
+   • Run backend tests:        cd backend &amp;&amp; pytest -q
+   • Run/boot the stack:       docker compose up --build  (or run backend+frontend locally)
+   • Exercise EVERY endpoint and the full UI flow:
+       - Products CRUD incl. duplicate SKU (expect 409)
+       - Customers CRUD incl. duplicate email (expect 409)
+       - Create order: success path reduces stock + correct total
+       - Create order: insufficient stock -> 400, no stock change
+       - Delete order: stock restored
+       - Delete product/customer that is referenced -> 409
+       - Dashboard numbers + low-stock list are correct
+       - Frontend: responsive layout, form validation, success/error toasts,
+         loading + empty states, no console errors, no broken requests (CORS)
+   • Check: HTTP codes, edge cases (qty 0/negative, missing fields, bad IDs,
+     huge quantities), transaction atomicity (no partial writes), and that
+     no credentials are hardcoded.
+   • Write down EVERY defect found as a concrete list (file:line + symptom).
+
+ STEP B — DECISION:
+   • If the defect list is EMPTY and all tests pass and all flows work ->
+     EXIT THE LOOP, go to PHASE 3.
+   • Otherwise continue to STEP C.
+
+ STEP C — FIX:
+   • Fix the highest-impact bug(s). Keep changes minimal and correct.
+   • Re-run the relevant test; add a regression test if it was missing.
+   • Commit via ./commit-as-rrr.sh "fix: &lt;what&gt;".
+   • Return to STEP A. (Do NOT declare done after a fix without re-reviewing.)
+
+Never fake green: never hardcode expected values or special-case logic just
+to pass a test. Fix the real cause. If a check fails, report the real output.
+
+============================================================
+PHASE 3 — FINAL SPEC MATCH  (verify against the assessment)
+============================================================
+Open "Technical Assessment (Software Engineer).md" and walk it top to bottom.
+Produce a requirement-by-requirement compliance table proving each item is
+actually implemented and verified (not just planned). Cover:
+
+ • §2 Tech stack (FastAPI, React JS, PostgreSQL, Docker, Compose, Git)
+ • §3.1 Products APIs + fields
+ • §3.2 Customers APIs + fields
+ • §3.3 Orders APIs + fields (customer ref, product ref(s), qty, total)
+ • §4 Business logic R1–R9
+ • §5 Frontend features (Products/Customers/Orders/Dashboard)
+ • §6 UI/UX (responsive, clean, validation, messages, structure, state mgmt)
+ • §7 Docker (prod backend Dockerfile, frontend Dockerfile, .dockerignore,
+       env config, compose with 3 services, slim images, no hardcoded creds,
+       named volume)
+ • §8 Deployment readiness (configs + documented manual steps)
+ • §9 Submission deliverables (GitHub repo, Docker Hub image, live frontend
+       URL, live backend URL) — mark which are code-ready vs. user-action.
+
+For each row state: REQUIREMENT | STATUS (Done / Manual-by-user) | EVIDENCE
+(test name, endpoint, file path, or command output). If ANY required item is
+not truly satisfied, go BACK to PHASE 2 and fix it, then re-verify.
+
+============================================================
+DEFINITION OF DONE (all must be true)
+============================================================
+[ ] `docker compose up --build` runs all 3 services from a clean clone
+[ ] pytest passes for every business rule R1–R9
+[ ] Products CRUD works; duplicate SKU -> 409
+[ ] Customers CRUD works; duplicate email -> 409
+[ ] Order create reduces stock + correct server-side total
+[ ] Order blocked on insufficient stock (400, no partial write)
+[ ] Order delete restores stock
+[ ] Dashboard shows totals + low-stock products correctly
+[ ] Responsive UI, form validation, success/error toasts, loading/empty states
+[ ] No hardcoded credentials; all config via env vars; named Postgres volume
+[ ] Slim images; production backend Dockerfile (non-root)
+[ ] Swagger docs reachable at /docs
+[ ] README documents setup, env vars, API, and manual deploy steps
+[ ] PHASE 3 compliance table shows every spec item Done or Manual-by-user
+[ ] Review loop ended with an EMPTY defect list
+
+When (and only when) all boxes are checked, output a final summary:
+the compliance table, what was built, how it was verified, and the exact
+manual steps remaining for the user (deploy + push links).</pre>
+  </div>
+
+  <footer>
+    Save this file's prompt and paste it into your agent. The loop continues
+    review → fix → re-review until the defect list is empty, then verifies
+    against <code>Technical Assessment (Software Engineer).md</code>.
+  </footer>
+</div>
+
+<script>
+  const promptEl = document.getElementById('prompt');
+  const copied = document.getElementById('copied');
+
+  document.getElementById('copyBtn').addEventListener('click', async () => {
+    const text = promptEl.innerText;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (e) {
+      const r = document.createRange();
+      r.selectNode(promptEl);
+      const s = window.getSelection();
+      s.removeAllRanges(); s.addRange(r);
+      document.execCommand('copy');
+      s.removeAllRanges();
+    }
+    copied.classList.add('show');
+    setTimeout(() => copied.classList.remove('show'), 1800);
+  });
+
+  document.getElementById('selectBtn').addEventListener('click', () => {
+    const r = document.createRange();
+    r.selectNode(promptEl);
+    const s = window.getSelection();
+    s.removeAllRanges(); s.addRange(r);
+  });
+</script>
+</body>
+</html>
