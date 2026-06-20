@@ -7,6 +7,20 @@ A production-ready full-stack Inventory and Order Management System, built as a 
 - **Frontend:** React (JavaScript), Vite, Tailwind CSS, React Query
 - **Infrastructure:** Docker, Docker Compose
 
+## Screenshots
+
+### Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### Products
+![Products](screenshots/products.png)
+
+### Customers
+![Customers](screenshots/customers.png)
+
+### Orders
+![Orders](screenshots/orders.png)
+
 ## Prerequisites
 - Docker and Docker Compose
 - Git
