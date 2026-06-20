@@ -18,28 +18,36 @@ def create_order(order: OrderCreate, db: Session = Depends(get_db)):
     total_amount = 0
     order_items_to_create = []
 
-    # Verify stock and prepare items
+    # Aggregate requested quantities by product_id
+    aggregated_items = {}
     for item in order.items:
-        product = db.query(Product).filter(Product.id == item.product_id).with_for_update().first()
+        if item.product_id in aggregated_items:
+            aggregated_items[item.product_id] += item.quantity
+        else:
+            aggregated_items[item.product_id] = item.quantity
+
+    # Verify stock and prepare items
+    for product_id, qty in aggregated_items.items():
+        product = db.query(Product).filter(Product.id == product_id).with_for_update().first()
         if not product:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Product {item.product_id} not found")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Product {product_id} not found")
         
-        if product.quantity < item.quantity:
+        if product.quantity < qty:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST, 
-                detail=f"Insufficient stock for product {product.name} (ID: {product.id}). Requested: {item.quantity}, Available: {product.quantity}"
+                detail=f"Insufficient stock for product {product.name} (ID: {product.id}). Requested: {qty}, Available: {product.quantity}"
             )
 
         # Reduce stock
-        product.quantity -= item.quantity
+        product.quantity -= qty
         
         # Calculate amount
         unit_price = product.price
-        total_amount += unit_price * item.quantity
+        total_amount += unit_price * qty
         
         order_items_to_create.append(OrderItem(
             product_id=product.id,
-            quantity=item.quantity,
+            quantity=qty,
             unit_price=unit_price
         ))
 
